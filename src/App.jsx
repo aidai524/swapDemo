@@ -5,7 +5,7 @@ import {
   estimateSwap,
   getStablePools,
   ftGetTokenMetadata,
-  instantSwap
+  instantSwap,
 } from "@ref_finance/ref-sdk";
 import {
   NavLogoSimple,
@@ -14,7 +14,7 @@ import {
   SwapArrowDown,
   ModalClose,
   Slider,
-  WaringTriangle
+  WaringTriangle,
 } from "./components/icon/icon";
 import { FiChevronUp, FiChevronDown } from "react-icons/fi";
 import Modal from "react-modal";
@@ -32,15 +32,15 @@ import {
   checkTransaction,
   nearDeposit,
   nearWithdraw,
-  isMobile
+  isMobile,
 } from "./services/swap";
 import { BeatLoader, ClipLoader } from "react-spinners";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
 const CONFIG = demo_config();
-const SUPPORT_LEDGER_KEY = 'REF_FI_DEMO_SUPPORT_LEDGER';
-const SLIPPAGE_KEY = 'REF_FI_DEMO_SLIPPAGE';
+const SUPPORT_LEDGER_KEY = "REF_FI_DEMO_SUPPORT_LEDGER";
+const SLIPPAGE_KEY = "REF_FI_DEMO_SLIPPAGE";
 
 export function App() {
   const [show, setShow] = useState(false);
@@ -57,9 +57,13 @@ export function App() {
   const [stablePoolsDetail, setStablePoolsDetail] = useState(null);
   const [routes, setRoutes] = useState();
   const [swapTodos, setSwapTodos] = useState();
-  const [slippageTolerance, setSlippageTolerance] = useState(+(localStorage.getItem(SLIPPAGE_KEY) || 0.5));
-  const [supportLedger, setSupportLedger] = useState(localStorage.getItem(SUPPORT_LEDGER_KEY) == '1');
-  const [errorStr, setErrorStr] = useState('');
+  const [slippageTolerance, setSlippageTolerance] = useState(
+    +(localStorage.getItem(SLIPPAGE_KEY) || 0.5)
+  );
+  const [supportLedger, setSupportLedger] = useState(
+    localStorage.getItem(SUPPORT_LEDGER_KEY) == "1"
+  );
+  const [errorStr, setErrorStr] = useState("");
   const [poolLoading, setPoolLoading] = useState(true);
   const [swapLoading, setSwapLoading] = useState(false);
   const [estimateLoading, setEstimateLoading] = useState(true);
@@ -68,7 +72,7 @@ export function App() {
   const isLogin = wallet.isSignedIn();
   useEffect(() => {
     getAllPools();
-    getInitTokenInAndTokenOut()
+    getInitTokenInAndTokenOut();
   }, []);
   useEffect(() => {
     if (txHash && isLogin) {
@@ -85,7 +89,7 @@ export function App() {
             isSlippageError,
           };
         })
-        .then(({ isSlippageError}) => {
+        .then(({ isSlippageError }) => {
           if (isSlippageError) {
             FailToast(txHash);
           } else {
@@ -93,7 +97,7 @@ export function App() {
           }
           window.history.replaceState(
             {},
-            '',
+            "",
             window.location.origin + pathname
           );
         });
@@ -103,21 +107,21 @@ export function App() {
   useEffect(() => {
     if (tokenIn && tokenOut && !poolLoading) {
       if (!tokenInAmount || +tokenInAmount == 0) {
-        setTokenOutAmount('0');
-        setExpectedOutput('0');
+        setTokenOutAmount("0");
+        setExpectedOutput("0");
       } else {
         clearTimeout(timer);
-        setEstimateLoading(true)
+        setEstimateLoading(true);
         const temp_timer = setTimeout(() => {
           getEstimateSwap();
-        }, 1000)
-        setTimer(temp_timer)
-      } 
-      history.replaceState({},'',`#${tokenIn.id}|${tokenOut.id}`)
+        }, 1000);
+        setTimer(temp_timer);
+      }
+      history.replaceState({}, "", `#${tokenIn.id}|${tokenOut.id}`);
     }
   }, [tokenIn, tokenOut, poolLoading, supportLedger, tokenInAmount]);
   async function getInitTokenInAndTokenOut() {
-    const hash = location.hash.substring(1).split('|');
+    const hash = location.hash.substring(1).split("|");
     const [tokenInId, tokenOutId] = hash;
     if (tokenInId && tokenOutId) {
       let tokenIn;
@@ -126,20 +130,20 @@ export function App() {
         tokenIn = nearMetadata;
         tokenIn.id = tokenInId;
       } else {
-        tokenIn = await ftGetTokenMetadata(tokenInId); 
+        tokenIn = await ftGetTokenMetadata(tokenInId);
       }
       if (tokenOutId == CONFIG.WRAP_NEAR_CONTRACT_ID) {
         tokenOut = nearMetadata;
         tokenOut.id = tokenOutId;
       } else {
-        tokenOut = await ftGetTokenMetadata(tokenOutId); 
+        tokenOut = await ftGetTokenMetadata(tokenOutId);
       }
       const tokenIn_b = await getTokenBalance(tokenInId);
       const tokenOut_b = await getTokenBalance(tokenOutId);
-      tokenIn.balance=tokenIn_b;
-      tokenOut.balance=tokenOut_b;
-      setTokenIn(tokenIn)
-      setTokenOut(tokenOut)
+      tokenIn.balance = tokenIn_b;
+      tokenOut.balance = tokenOut_b;
+      setTokenIn(tokenIn);
+      setTokenOut(tokenOut);
     }
   }
   async function getEstimateSwap() {
@@ -155,19 +159,22 @@ export function App() {
       simplePools,
       options,
     }).catch((error) => {
-      setErrorStr(error.toString().substring(6))
-      setTokenOutAmount('');
-      setExpectedOutput('')
-    })
+      setErrorStr(error.toString().substring(6));
+      setTokenOutAmount("");
+      setExpectedOutput("");
+    });
     if (swapTodos) {
-      const { expectedOutput, routes } = getExpectedOutputFromActions(swapTodos, tokenOut.id);
-      setRoutes(routes)
+      const { expectedOutput, routes } = getExpectedOutputFromActions(
+        swapTodos,
+        tokenOut.id
+      );
+      setRoutes(routes);
       setTokenOutAmount(toPrecision(expectedOutput.toString(), 8));
-      setExpectedOutput(expectedOutput.toString())
-      setErrorStr('');
-      setSwapTodos(swapTodos)
+      setExpectedOutput(expectedOutput.toString());
+      setErrorStr("");
+      setSwapTodos(swapTodos);
     }
-    setEstimateLoading(false)
+    setEstimateLoading(false);
   }
   async function getAllPools() {
     const allPools = await fetchAllPools();
@@ -205,9 +212,9 @@ export function App() {
   function switchToken() {
     setTokenIn(tokenOut);
     setTokenOut(tokenIn);
-    setTokenInAmount('1');
-    setTokenOutAmount('');
-    setExpectedOutput('');
+    setTokenInAmount("1");
+    setTokenOutAmount("");
+    setExpectedOutput("");
   }
   async function swap() {
     setSwapLoading(true);
@@ -217,29 +224,33 @@ export function App() {
       amountIn: tokenInAmount,
       swapTodos,
       slippageTolerance,
-      AccountId: wallet.getAccountId()
+      AccountId: wallet.getAccountId(),
     }).catch((error) => {
       setSwapLoading(false);
-      setErrorStr(error.toString().substring(6))
-    })
+      setErrorStr(error.toString().substring(6));
+    });
     if (tokenIn.id == CONFIG.WRAP_NEAR_CONTRACT_ID) {
-      transactions.unshift(nearDeposit(tokenInAmount))
+      transactions.unshift(nearDeposit(tokenInAmount));
     } else if (tokenOut.id == CONFIG.WRAP_NEAR_CONTRACT_ID) {
-      const minTokenOutAmout = Number(expectedOutput || '0')*((100 - +slippageTolerance) / 100);
+      const minTokenOutAmout =
+        Number(expectedOutput || "0") * ((100 - +slippageTolerance) / 100);
       transactions.push(nearWithdraw(minTokenOutAmout.toString()));
     }
-    executeMultipleTransactions(transactions)
+    executeMultipleTransactions(transactions);
   }
   function getSwapButtonStatus() {
     if (tokenIn && tokenOut) {
-      const balance = +toReadableNumber(tokenIn.decimals, tokenIn.balance || '0');
+      const balance = +toReadableNumber(
+        tokenIn.decimals,
+        tokenIn.balance || "0"
+      );
       const condition1 = +tokenInAmount > 0;
       const condition2 = +tokenOutAmount > 0;
       let condition3 = +tokenInAmount <= balance;
       if (tokenIn.id == CONFIG.WRAP_NEAR_CONTRACT_ID) {
         condition3 = +tokenInAmount <= balance - 0.5;
       }
-      if (condition1 && condition2 && condition3) return true
+      if (condition1 && condition2 && condition3) return true;
     }
     return false;
   }
@@ -250,9 +261,12 @@ export function App() {
       <div>
         <div className="flex items-center justify-between p-5 mb-5 lg:mb-20">
           <NavLogoSimple></NavLogoSimple>
-          <div className="relative flex items-center justify-center rounded-xl border border-gradientFrom text-white px-3 py-0.5 text-xs"
-           tabIndex={-1}
-           onBlur={() => {setShow(false)}}
+          <div
+            className="relative flex items-center justify-center rounded-xl border border-gradientFrom text-white px-3 py-0.5 text-xs"
+            tabIndex={-1}
+            onBlur={() => {
+              setShow(false);
+            }}
           >
             <Near className="mr-2"></Near>
             {getLoginAccount()}
@@ -274,7 +288,11 @@ export function App() {
         <div className="swapContainer bg-dark rounded-lg p-7 xsm:mx-2 lg:w-560px md:w-5/6 lg:m-auto relative">
           <div className="flex items-center justify-between mb-5">
             <span className="text-white text-2xl">Swap</span>
-            <Slider onClick={() => {setShowSlippage(true)}}></Slider>
+            <Slider
+              onClick={() => {
+                setShowSlippage(true);
+              }}
+            ></Slider>
           </div>
           <InputArea
             amount={tokenInAmount}
@@ -295,29 +313,39 @@ export function App() {
             changeAmount={setTokenOutAmount}
             type="out"
           ></InputArea>
-          <div className={`flex items-center error text-sm text-warnColor mt-5 break-all ${errorStr ? '': 'hidden'}`}>
+          <div
+            className={`flex items-center error text-sm text-warnColor mt-5 break-all ${
+              errorStr ? "" : "hidden"
+            }`}
+          >
             <WaringTriangle className="transform scale-75 mr-1.5 flex-shrink-0"></WaringTriangle>
-              {errorStr}
+            {errorStr}
           </div>
-          {
-            +tokenOutAmount ? <SwapDetail 
-            slippageTolerance={slippageTolerance}
-            tokenInAmount={tokenInAmount} 
-            tokenOutAmount={tokenOutAmount}
-            tokenIn={tokenIn}
-            tokenOut={tokenOut}
-            routes={routes}
-            ></SwapDetail>: null
-          }
-          
+          {+tokenOutAmount ? (
+            <SwapDetail
+              slippageTolerance={slippageTolerance}
+              tokenInAmount={tokenInAmount}
+              tokenOutAmount={tokenOutAmount}
+              tokenIn={tokenIn}
+              tokenOut={tokenOut}
+              routes={routes}
+            ></SwapDetail>
+          ) : null}
+
           {isLogin ? (
             <SwapButton
               className="mt-6"
-              disabled={ (tokenIn && tokenOut) ? (estimateLoading || swapLoading || !swapButtonSwapStatus) : true}
+              disabled={
+                tokenIn && tokenOut
+                  ? estimateLoading || swapLoading || !swapButtonSwapStatus
+                  : true
+              }
               onClick={swap}
             >
               <ButtonTextWrapper
-                loading={(tokenIn && tokenOut) ? (estimateLoading ||  swapLoading) : false}
+                loading={
+                  tokenIn && tokenOut ? estimateLoading || swapLoading : false
+                }
                 Text={() => (
                   <h1 className="text-lg font-inter font-semibold text-white">
                     Swap
@@ -326,7 +354,7 @@ export function App() {
               />
             </SwapButton>
           ) : (
-            <ConnectButton className="mt-6" onClick={signIn} ></ConnectButton>
+            <ConnectButton className="mt-6" onClick={signIn}></ConnectButton>
           )}
         </div>
         <SelectToken
@@ -338,13 +366,15 @@ export function App() {
             setShowSelectToken(false);
           }}
         ></SelectToken>
-        <SlippageSelector 
+        <SlippageSelector
           setSupportLedger={setSupportLedger}
           supportLedger={supportLedger}
           slippageTolerance={slippageTolerance}
           setSlippageTolerance={setSlippageTolerance}
-          isOpen={showSlippage} 
-          onRequestClose={() => {setShowSlippage(false)}}
+          isOpen={showSlippage}
+          onRequestClose={() => {
+            setShowSlippage(false);
+          }}
         ></SlippageSelector>
       </div>
     </>
@@ -352,11 +382,19 @@ export function App() {
 }
 
 function SwapDetail(props) {
-  const { slippageTolerance, tokenInAmount,tokenOutAmount, tokenIn, tokenOut, routes} = props;
+  const {
+    slippageTolerance,
+    tokenInAmount,
+    tokenOutAmount,
+    tokenIn,
+    tokenOut,
+    routes,
+  } = props;
   const [showDetailBox, setShowDetailBox] = useState(true);
   function getMinimumReceived() {
-    const min = Number(tokenOutAmount) *((100 - Number(slippageTolerance)) / 100);
-    return toPrecision(min.toString(), 8)
+    const min =
+      Number(tokenOutAmount) * ((100 - Number(slippageTolerance)) / 100);
+    return toPrecision(min.toString(), 8);
   }
   function getSwapRate() {
     const rate = Number(tokenInAmount) / Number(tokenOutAmount);
@@ -364,62 +402,75 @@ function SwapDetail(props) {
     return `1 ${tokenOut.symbol} ≈ ${displayRate} ${tokenIn.symbol}`;
   }
   function getPoolFee() {
-    let route1 = {}
-    let route2 = {}
+    let route1 = {};
+    let route2 = {};
     routes.forEach((route, index) => {
       let totalFee = 0;
       let out = 0;
       route.forEach((r, index) => {
         const { pool, estimate } = r;
         totalFee += pool.fee || pool.total_fee;
-        if (index+1 == route.length) {
+        if (index + 1 == route.length) {
           out = estimate;
         }
-      })
+      });
       if (index == 0) {
         route1 = {
           fee: totalFee,
-          estimate:out
-        }
+          estimate: out,
+        };
       } else {
         route2 = {
           fee: totalFee,
-          estimate:out
-        }
+          estimate: out,
+        };
       }
-    })
-    const { fee:fee1, estimate:estimate1 } = route1;
-    const { fee:fee2=0, estimate:estimate2=0 } = route2;
+    });
+    const { fee: fee1, estimate: estimate1 } = route1;
+    const { fee: fee2 = 0, estimate: estimate2 = 0 } = route2;
     const tokenout = +estimate1 + +estimate2;
-    const out1Percent = +estimate1/tokenout;
-    const out2Percent = +estimate2/tokenout;
+    const out1Percent = +estimate1 / tokenout;
+    const out2Percent = +estimate2 / tokenout;
     const fee1Take = out1Percent * Number(fee1);
     const fee2Take = out2Percent * Number(fee2);
     const totalFee = fee1Take + fee2Take;
-    const p = (totalFee / 100);
+    const p = totalFee / 100;
     const displayTotalFee = toPrecision(p.toString(), 2);
-    const amount = (p / 100) * Number(tokenInAmount)
+    const amount = (p / 100) * Number(tokenInAmount);
     const displayAmount = toPrecision(amount.toString(), 3);
-    return `${displayTotalFee}% / ${displayAmount} ${tokenIn.symbol}`
-    
+    return `${displayTotalFee}% / ${displayAmount} ${tokenIn.symbol}`;
   }
-  return <div className="mt-6">
+  return (
+    <div className="mt-6">
       <div className="flex items-center justify-center mb-4">
-        <div className="flex items-center" onClick={() => {setShowDetailBox(!showDetailBox)}}>
+        <div
+          className="flex items-center"
+          onClick={() => {
+            setShowDetailBox(!showDetailBox);
+          }}
+        >
           <span className="text-xs text-white">Details</span>
-          {
-            showDetailBox ?<FiChevronUp className="text-xs font-bold text-white ml-1"></FiChevronUp>:<FiChevronDown className="text-xs font-bold text-white ml-1"></FiChevronDown>
-          }
+          {showDetailBox ? (
+            <FiChevronUp className="text-xs font-bold text-white ml-1"></FiChevronUp>
+          ) : (
+            <FiChevronDown className="text-xs font-bold text-white ml-1"></FiChevronDown>
+          )}
         </div>
       </div>
-      <div className={`flex items-center flex-col ${showDetailBox ? '': 'hidden'}`}>
+      <div
+        className={`flex items-center flex-col ${
+          showDetailBox ? "" : "hidden"
+        }`}
+      >
         <div className="flex items-center justify-between w-full my-1.5">
           <span className="text-xs text-primaryText">Minimum received</span>
           <label className="text-xs text-white">{getMinimumReceived()}</label>
         </div>
         <div className="flex items-center justify-between w-full my-1.5">
           <span className="text-xs text-primaryText">Swap rate</span>
-          <label className="text-xs text-white font-sans">{getSwapRate()}</label>
+          <label className="text-xs text-white font-sans">
+            {getSwapRate()}
+          </label>
         </div>
         <div className="flex items-center justify-between w-full my-1.5">
           <span className="text-xs text-primaryText">Pool fee</span>
@@ -430,7 +481,8 @@ function SwapDetail(props) {
           <label className="text-xs text-white">{slippageTolerance}%</label>
         </div>
       </div>
-  </div>
+    </div>
+  );
 }
 
 function InputArea(props) {
@@ -457,7 +509,7 @@ function InputArea(props) {
   function getBalance() {
     if (token) {
       const { balance, decimals } = token;
-      const b = toReadableNumber(decimals, balance || '0');
+      const b = toReadableNumber(decimals, balance || "0");
       return b;
     } else {
       return "0";
@@ -470,7 +522,7 @@ function InputArea(props) {
       if (b_r > 0) {
         return b_r.toString();
       } else {
-        return '0'
+        return "0";
       }
     }
     return b;
@@ -480,8 +532,17 @@ function InputArea(props) {
       <div className="flex items-center justify-between">
         <div className="w-1 flex-grow">
           <div className="flex items-center justify-between text-xs text-primaryText pl-1 mb-2">
-            <div>Balance:<span className="ml-1">{displayBalance(token)}</span></div>
-            <span className={`cursor-pointer ${type== 'in' ? '': 'hidden'}`} onClick={() => {changeAmount(getMax())}}>Max</span>
+            <div>
+              Balance:<span className="ml-1">{displayBalance(token)}</span>
+            </div>
+            <span
+              className={`cursor-pointer ${type == "in" ? "" : "hidden"}`}
+              onClick={() => {
+                changeAmount(getMax());
+              }}
+            >
+              Max
+            </span>
           </div>
           <div className="px-2 bg-black bg-opacity-20 rounded-md overflow-hidden">
             <input
@@ -529,7 +590,7 @@ function InputArea(props) {
 function SwitchButton(props) {
   return (
     <div
-     {...props}
+      {...props}
       className="absolute flex items-center justify-center w-11 h-11 border border-white border-opacity-40 rounded-full cursor-pointer bg-dark"
     >
       <SwapArrow></SwapArrow>
@@ -611,7 +672,7 @@ function ConnectButton(props) {
 function SelectToken(props) {
   const { isOpen, onRequestClose, type, setTokenIn, setTokenOut } = props;
   const tokenList = CONFIG.tokenList;
-  const cardWidth = isMobile() ? '90vw' : '30vw';
+  const cardWidth = isMobile() ? "90vw" : "30vw";
   // const cardHeight = "90h";
   const displayList = UseTokensData(tokenList);
   function displayTokenBalance(token) {
@@ -726,11 +787,18 @@ function ButtonTextWrapper({ Text, loading }) {
   return <>{loading ? <BeatLoading /> : <Text />}</>;
 }
 function SlippageSelector(props) {
-  const { isOpen, onRequestClose, slippageTolerance, setSlippageTolerance, setSupportLedger, supportLedger } = props;
+  const {
+    isOpen,
+    onRequestClose,
+    slippageTolerance,
+    setSlippageTolerance,
+    setSupportLedger,
+    supportLedger,
+  } = props;
   const [invalid, setInvalid] = useState(false);
   const [warn, setWarn] = useState(false);
-  const [symbolsArr] = useState(['e', 'E', '+', '-']);
-  const cardWidth =  isMobile() ?"90vw":"25vw";
+  const [symbolsArr] = useState(["e", "E", "+", "-"]);
+  const cardWidth = isMobile() ? "90vw" : "25vw";
   const cardHeight = "90vw";
   const validSlippages = [0.1, 0.5, 1.0];
   const ref = useRef(null);
@@ -738,8 +806,8 @@ function SlippageSelector(props) {
     if (Number(slippageTolerance) > 1) {
       setWarn(true);
     }
-  }, [])
- 
+  }, []);
+
   const handleBtnChange = (amount) => {
     if (Number(amount) > 0 && Number(amount) < 100) {
       if (Number(amount) > 1) {
@@ -749,7 +817,7 @@ function SlippageSelector(props) {
       }
       setInvalid(false);
       setSlippageTolerance(amount);
-      localStorage.setItem(SLIPPAGE_KEY, amount)
+      localStorage.setItem(SLIPPAGE_KEY, amount);
     } else {
       setInvalid(true);
       setWarn(false);
@@ -758,7 +826,7 @@ function SlippageSelector(props) {
   };
   function closeModal() {
     if (invalid) return;
-    onRequestClose()
+    onRequestClose();
   }
   return (
     <Modal
@@ -839,7 +907,9 @@ function SlippageSelector(props) {
                 ? "outline-none border border-error text-error bg-opacity-0 invalid-input"
                 : ""
             } ${
-              warn ? "outline-none border border-warn text-warn bg-opacity-0 warn-input" : ""
+              warn
+                ? "outline-none border border-warn text-warn bg-opacity-0 warn-input"
+                : ""
             }`}
             type="number"
             required={true}
@@ -851,28 +921,22 @@ function SlippageSelector(props) {
         </div>
         <div className="flex items-center mt-6">
           <span className="text-sm text-white mr-2">Support Ledger</span>
-          <CustomSwitch
-              isOpen={supportLedger}
-              setIsOpen={setSupportLedger}
-            />
+          <CustomSwitch isOpen={supportLedger} setIsOpen={setSupportLedger} />
         </div>
       </div>
     </Modal>
   );
 }
-function CustomSwitch({
-  isOpen,
-  setIsOpen
-}) {
+function CustomSwitch({ isOpen, setIsOpen }) {
   return (
     <div
       className={`ml-3 cursor-pointer ${
-        isOpen ? 'bg-gradientFrom' : 'bg-farmSbg'
+        isOpen ? "bg-gradientFrom" : "bg-farmSbg"
       }  p-0.5 flex items-center`}
       style={{
-        height: '16px',
-        width: '29px',
-        borderRadius: '20px',
+        height: "16px",
+        width: "29px",
+        borderRadius: "20px",
       }}
       onClick={() => {
         if (isOpen) {
@@ -880,23 +944,23 @@ function CustomSwitch({
           localStorage.removeItem(SUPPORT_LEDGER_KEY);
         } else {
           setIsOpen(true);
-          localStorage.setItem(SUPPORT_LEDGER_KEY, '1');
+          localStorage.setItem(SUPPORT_LEDGER_KEY, "1");
         }
       }}
     >
       <div
         className={`rounded-full bg-white transition-all ${
-          isOpen ? 'transform translate-x-3 relative left-px' : ''
+          isOpen ? "transform translate-x-3 relative left-px" : ""
         }`}
         style={{
-          width: '12px',
-          height: '12px',
+          width: "12px",
+          height: "12px",
         }}
       ></div>
     </div>
   );
 }
-function swapToast(txHash){
+function swapToast(txHash) {
   toast(
     <a
       className="text-white w-full h-full pl-1.5"
@@ -917,49 +981,39 @@ function swapToast(txHash){
       closeOnClick: true,
       hideProgressBar: false,
       progressStyle: {
-        background: '#00FFD1',
-        borderRadius: '8px',
+        background: "#00FFD1",
+        borderRadius: "8px",
       },
       style: {
-        background: '#1D2932',
-        boxShadow: '0px 0px 10px 10px rgba(0, 0, 0, 0.15)',
-        borderRadius: '8px',
+        background: "#1D2932",
+        boxShadow: "0px 0px 10px 10px rgba(0, 0, 0, 0.15)",
+        borderRadius: "8px",
       },
     }
   );
-};
-function FailToast(){
-  toast(
-    <a
-      className="text-white w-full h-full pl-1.5"
-    >
-      Swap failed.
-    </a>,
-    {
-      autoClose: 8000,
-      closeOnClick: true,
-      hideProgressBar: false,
-      progressStyle: {
-        background: '#00FFD1',
-        borderRadius: '8px',
-      },
-      style: {
-        background: '#1D2932',
-        boxShadow: '0px 0px 10px 10px rgba(0, 0, 0, 0.15)',
-        borderRadius: '8px',
-      },
-    }
-  );
-};
+}
+function FailToast() {
+  toast(<a className="text-white w-full h-full pl-1.5">Swap failed.</a>, {
+    autoClose: 8000,
+    closeOnClick: true,
+    hideProgressBar: false,
+    progressStyle: {
+      background: "#00FFD1",
+      borderRadius: "8px",
+    },
+    style: {
+      background: "#1D2932",
+      boxShadow: "0px 0px 10px 10px rgba(0, 0, 0, 0.15)",
+      borderRadius: "8px",
+    },
+  });
+}
 
-export function CloseIcon({
-  width,
-  height,
-}) {
+export function CloseIcon({ width, height }) {
   return (
     <svg
-      width={width || '10'}
-      height={height || '10'}
+      width={width || "10"}
+      height={height || "10"}
       viewBox="0 0 10 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

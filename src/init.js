@@ -1,6 +1,7 @@
 import * as nearAPI from "near-api-js";
 import { getConfig } from "@ref_finance/ref-sdk";
-const { keyStores, connect, Near, WalletConnection, ConnectedWalletAccount } = nearAPI;
+const { keyStores, connect, Near, WalletConnection, ConnectedWalletAccount } =
+  nearAPI;
 const config = getConfig();
 config.keyStore = new keyStores.BrowserLocalStorageKeyStore();
 export const near = new Near({

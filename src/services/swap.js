@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { near, wallet } from "../init";
 import { providers, utils, ConnectedWalletAccount } from "near-api-js";
-import { PublicKey } from 'near-api-js/lib/utils';
-import { functionCall, createTransaction } from 'near-api-js/lib/transaction';
+import { PublicKey } from "near-api-js/lib/utils";
+import { functionCall, createTransaction } from "near-api-js/lib/transaction";
 import Big from "big.js";
-import BN from 'bn.js';
-import { baseDecode } from 'borsh';
+import BN from "bn.js";
+import { baseDecode } from "borsh";
 
 export function demo_config(env = process.env.NEAR_ENV) {
   switch (env) {
@@ -13,14 +13,14 @@ export function demo_config(env = process.env.NEAR_ENV) {
       return {
         WRAP_NEAR_CONTRACT_ID: "wrap.near",
         nodeUrl: "https://rpc.mainnet.near.org",
-        REF_FARM_BOOST_CONTRACT_ID:'boostfarm.ref-labs.near',
-        tokenList: []
+        REF_FARM_BOOST_CONTRACT_ID: "boostfarm.ref-labs.near",
+        tokenList: [],
       };
     case "testnet":
       return {
         WRAP_NEAR_CONTRACT_ID: "wrap.testnet",
         nodeUrl: "https://rpc.testnet.near.org",
-        REF_FARM_BOOST_CONTRACT_ID:'boostfarm.ref-finance.testnet',
+        REF_FARM_BOOST_CONTRACT_ID: "boostfarm.ref-finance.testnet",
         tokenList: [
           "ref.fakes.testnet",
           "wrap.testnet",
@@ -34,32 +34,32 @@ export function demo_config(env = process.env.NEAR_ENV) {
           "stnear.fakes.testnet",
           "skyward.fakes.testnet",
           "aurora.fakes.testnet",
-        ]
+        ],
       };
     default:
       return {
         WRAP_NEAR_CONTRACT_ID: "wrap.near",
         nodeUrl: "https://rpc.mainnet.near.org",
-        REF_FARM_BOOST_CONTRACT_ID:'boostfarm.ref-labs.near',
+        REF_FARM_BOOST_CONTRACT_ID: "boostfarm.ref-labs.near",
         tokenList: [
-          'wrap.near',
-          'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near',
-          'dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near',
-          '6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near',
-          'c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.factory.bridge.near',
-          '111111111117dc0aa78b770fa6a738034120c302.factory.bridge.near',
-          'c944e90c64b2c07662a292be6244bdf05cda44a7.factory.bridge.near',
-          'token.skyward.near',
-          'berryclub.ek.near',
-          'farm.berryclub.ek.near',
-          '6f259637dcd74c767781e37bc6133cd6a68aa161.factory.bridge.near',
-          'de30da39c46104798bb5aa3fe8b9e0e1f348163f.factory.bridge.near',
-          '1f9840a85d5af5bf1d1762f925bdaddc4201f984.factory.bridge.near',
-          '2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near',
-          '514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near',
-          'f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near',
-          'token.v2.ref-finance.near',
-        ]
+          "wrap.near",
+          "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near",
+          "dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near",
+          "6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near",
+          "c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.factory.bridge.near",
+          "111111111117dc0aa78b770fa6a738034120c302.factory.bridge.near",
+          "c944e90c64b2c07662a292be6244bdf05cda44a7.factory.bridge.near",
+          "token.skyward.near",
+          "berryclub.ek.near",
+          "farm.berryclub.ek.near",
+          "6f259637dcd74c767781e37bc6133cd6a68aa161.factory.bridge.near",
+          "de30da39c46104798bb5aa3fe8b9e0e1f348163f.factory.bridge.near",
+          "1f9840a85d5af5bf1d1762f925bdaddc4201f984.factory.bridge.near",
+          "2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near",
+          "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near",
+          "f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near",
+          "token.v2.ref-finance.near",
+        ],
       };
   }
 }
@@ -69,7 +69,7 @@ export function viewFunction(contractId, methodName, args) {
 }
 
 export async function getTokenBalance(id) {
- if (!wallet.isSignedIn()) return '0';
+  if (!wallet.isSignedIn()) return "0";
   let result;
   if (id == CONFIG.WRAP_NEAR_CONTRACT_ID) {
     result = getAccountNearBalance();
@@ -108,7 +108,7 @@ export function UseTokensData(tokenIds) {
   }, []);
   async function getTokensData() {
     const promisTokens = tokenIds.map(async (id) => {
-      let balance = '0';
+      let balance = "0";
       if (wallet.isSignedIn()) {
         balance = await getTokenBalance(id);
       }
@@ -196,8 +196,8 @@ export function getExpectedOutputFromActions(actions, outputToken) {
   }
 
   return {
-    expectedOutput:expectedOutput.toString(),
-    routes
+    expectedOutput: expectedOutput.toString(),
+    routes,
   };
 }
 export function separateRoutes(actions, outputToken) {
@@ -217,7 +217,7 @@ export function separateRoutes(actions, outputToken) {
 
 export const executeMultipleTransactions = async (
   transactions,
-  callbackUrl,
+  callbackUrl
 ) => {
   const currentTransactions = await Promise.all(
     transactions.map((t, i) => {
@@ -238,8 +238,12 @@ export const executeMultipleTransactions = async (
   return wallet.requestSignTransactions(currentTransactions, callbackUrl);
 };
 
-async function createNewTransaction({receiverId, nonceOffset, actions}) {
-  const walletAccount = new ConnectedWalletAccount(wallet, wallet._near.connection, wallet._authData.accountId)
+async function createNewTransaction({ receiverId, nonceOffset, actions }) {
+  const walletAccount = new ConnectedWalletAccount(
+    wallet,
+    wallet._near.connection,
+    wallet._authData.accountId
+  );
   const localKey = await walletAccount.connection.signer.getPublicKey(
     walletAccount.accountId,
     walletAccount.connection.networkId
@@ -250,10 +254,14 @@ async function createNewTransaction({receiverId, nonceOffset, actions}) {
     localKey
   );
   if (!accessKey) {
-    throw new Error(`Cannot find matching key for transaction sent to ${receiverId}`);
+    throw new Error(
+      `Cannot find matching key for transaction sent to ${receiverId}`
+    );
   }
 
-  const block = await walletAccount.connection.provider.block({ finality: 'final' });
+  const block = await walletAccount.connection.provider.block({
+    finality: "final",
+  });
   const blockHash = baseDecode(block.header.hash);
 
   const publicKey = PublicKey.from(accessKey.public_key);
@@ -269,20 +277,21 @@ async function createNewTransaction({receiverId, nonceOffset, actions}) {
   );
 }
 
-export const getGas = (gas) =>
-  gas ? new BN(gas) : new BN('100000000000000');
+export const getGas = (gas) => (gas ? new BN(gas) : new BN("100000000000000"));
 export const getAmount = (amount) =>
-  amount ? new BN(utils.format.parseNearAmount(amount)) : new BN('0');
+  amount ? new BN(utils.format.parseNearAmount(amount)) : new BN("0");
 
 export const getURLInfo = () => {
   const search = window.location.search;
   const pathname = window.location.pathname;
-  const errorType = new URLSearchParams(search).get('errorType');
-  const errorCode = new URLSearchParams(search).get('errorCode');
-  const signInErrorType = new URLSearchParams(search).get('signInErrorType');
-  const txHashes = new URLSearchParams(search).get('transactionHashes')?.split(',');
+  const errorType = new URLSearchParams(search).get("errorType");
+  const errorCode = new URLSearchParams(search).get("errorCode");
+  const signInErrorType = new URLSearchParams(search).get("signInErrorType");
+  const txHashes = new URLSearchParams(search)
+    .get("transactionHashes")
+    ?.split(",");
   return {
-    txHash: txHashes?.pop() || '',
+    txHash: txHashes?.pop() || "",
     pathname,
     errorType,
     signInErrorType,
@@ -291,42 +300,42 @@ export const getURLInfo = () => {
 };
 
 export const checkTransaction = (txHash) => {
-  return (near.connection.provider).sendJsonRpc(
-    'EXPERIMENTAL_tx_status',
-    [txHash, wallet.getAccountId()]
-  );
+  return near.connection.provider.sendJsonRpc("EXPERIMENTAL_tx_status", [
+    txHash,
+    wallet.getAccountId(),
+  ]);
 };
 export const nearDeposit = (amount) => {
-  const nearDepositTransaction ={
+  const nearDepositTransaction = {
     receiverId: CONFIG.WRAP_NEAR_CONTRACT_ID,
     functionCalls: [
       {
-        methodName: 'near_deposit',
+        methodName: "near_deposit",
         args: {},
-        gas: '50000000000000',
+        gas: "50000000000000",
         amount,
       },
     ],
-  }
+  };
   return nearDepositTransaction;
 };
 
 export const nearWithdraw = (amount) => {
-  const nearWithdrawTransaction =  {
+  const nearWithdrawTransaction = {
     receiverId: CONFIG.WRAP_NEAR_CONTRACT_ID,
     functionCalls: [
       {
-        methodName: 'near_withdraw',
+        methodName: "near_withdraw",
         args: { amount: utils.format.parseNearAmount(amount) },
         amount: ONE_YOCTO_NEAR,
       },
     ],
-  }
+  };
 
-  return nearWithdrawTransaction
+  return nearWithdrawTransaction;
 };
 
-export const ONE_YOCTO_NEAR = '0.000000000000000000000001';
+export const ONE_YOCTO_NEAR = "0.000000000000000000000001";
 
 export const isMobile = () => {
   return window.screen.width <= 1023;
