@@ -7,7 +7,7 @@
     "start": "parcel src/index.html",
     "build:testnet": "NEAR_ENV=testnet parcel build src/index.html",
     "build:mainnet": "NEAR_ENV=mainnet parcel build src/index.html",
-    "build": "parcel build src/index.html",
+    "build": "NEAR_ENV=testnet parcel build src/index.html",
     "prettier:fix": "prettier --write src"
   },
   "dependencies": {
