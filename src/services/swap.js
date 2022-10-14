@@ -59,6 +59,7 @@ export function demo_config(env = process.env.NEAR_ENV) {
           "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near",
           "f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near",
           "token.v2.ref-finance.near",
+          "usn",
         ],
       };
   }
