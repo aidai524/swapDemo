@@ -122,7 +122,8 @@ export function App() {
   }, [tokenIn, tokenOut, poolLoading, supportLedger, tokenInAmount]);
   async function getInitTokenInAndTokenOut() {
     const hash = location.hash.substring(1).split("|");
-    const [tokenInId, tokenOutId] = hash;
+    const tokenInId = hash[0] || CONFIG.tokenList[0];
+    const tokenOutId = hash[1] || CONFIG.tokenList[1];
     if (tokenInId && tokenOutId) {
       let tokenIn;
       let tokenOut;

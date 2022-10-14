@@ -22,8 +22,8 @@ export function demo_config(env = process.env.NEAR_ENV) {
         nodeUrl: "https://rpc.testnet.near.org",
         REF_FARM_BOOST_CONTRACT_ID: "boostfarm.ref-finance.testnet",
         tokenList: [
-          "ref.fakes.testnet",
           "wrap.testnet",
+          "ref.fakes.testnet",
           "banana.ft-fin.testnet",
           "usdc.fakes.testnet",
           "usdt.fakes.testnet",
@@ -43,6 +43,8 @@ export function demo_config(env = process.env.NEAR_ENV) {
         REF_FARM_BOOST_CONTRACT_ID: "boostfarm.ref-labs.near",
         tokenList: [
           "wrap.near",
+          "token.v2.ref-finance.near",
+          "usn",
           "a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near",
           "dac17f958d2ee523a2206206994597c13d831ec7.factory.bridge.near",
           "6b175474e89094c44da98b954eedeac495271d0f.factory.bridge.near",
@@ -58,8 +60,6 @@ export function demo_config(env = process.env.NEAR_ENV) {
           "2260fac5e5542a773aa44fbcfedf7c193bc2c599.factory.bridge.near",
           "514910771af9ca656af840dff83e8264ecf986ca.factory.bridge.near",
           "f5cfbc74057c610c8ef151a439252680ac68c6dc.factory.bridge.near",
-          "token.v2.ref-finance.near",
-          "usn",
         ],
       };
   }
