@@ -207,7 +207,7 @@ export function App() {
     window.location.replace("/");
   }
   function signIn() {
-    wallet.requestSignIn(CONFIG.REF_FARM_BOOST_CONTRACT_ID);
+    wallet.requestSignIn();
   }
   function switchToken() {
     setTokenIn(tokenOut);
